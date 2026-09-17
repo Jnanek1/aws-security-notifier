@@ -58,7 +58,7 @@ resource "aws_lambda_function" "security_notifier" {
 
 resource "aws_cloudwatch_event_rule" "security_event_rule" {
     name = "security-notifier-rule"
-    description = "Wykrywa kluczowe akcje w koncie AWS"
+    description = "Detects key actions in the AWS account"
 
     event_pattern = jsonencode({
         source = ["aws.iam", "aws.s3"]

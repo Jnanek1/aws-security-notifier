@@ -7,10 +7,10 @@ def lambda_function(event, context):
     WEBHOOK = os.environ.get('DISCORD_WEBHOOK_URL')
     
     if not WEBHOOK:
-        print("Błąd: Zmienna DISCORD_WEBHOOK_URL nie istnieje bądź jest pusta.")
+        print("Error: DISCORD_WEBHOOK_URL environment variable is missing or empty.")
         return{
             "statusCode": 500,
-            "body": json.dumps("brak konfiguracji webhooka w zmiennych środowiskowych.")
+            "body": json.dumps("Discord webhook URL not set in environment variables.")
         }
 
     aws_region = event.get("region")
@@ -18,14 +18,14 @@ def lambda_function(event, context):
     user_identity = event.get('detail', {}).get('userIdentity', {})
     user_name = (
         user_identity.get('userName') or 
-        user_identity.get('principalId', 'Nieznany / Konsola AWS')
+        user_identity.get('principalId', 'Unknown / AWS Management Console')
     )
-    event_detail = detale.get("eventName", "Nieznane zdarzenie")
+    event_detail = detale.get("eventName", "Unknown event")
 
     message_content = {
         "content": f"**AWS Security Alert!**\n"
-                   f"**Zdarzenie:** `{event_detail}`\n"
-                   f"**Użytkownik:** `{user_name}`\n"
+                   f"**Event:** `{event_detail}`\n"
+                   f"**User:** `{user_name}`\n"
                    f"**Region:** `{aws_region}`\n"
     }
     
@@ -39,9 +39,9 @@ def lambda_function(event, context):
     
     try:
         with urllib.request.urlopen(req) as response:
-            print(f"Powiadomienie wysłane! Status: {response.status}")
+            print(f"Notification sent! Status: {response.status}")
     except Exception as e:
-        print(f"Błąd podczas wysyłania do Discorda: {e}")
+        print(f"Error sending message to Discord: {e}")
         return {
             "statusCode": 500,
             "body": json.dumps(str(e))
@@ -49,5 +49,5 @@ def lambda_function(event, context):
 
     return {
         "statusCode": 200,
-        "body": json.dumps("Pomyślnie przetworzono zdarzenie!")
+        "body": json.dumps("Successfully processed the event!")
     }

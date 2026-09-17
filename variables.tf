@@ -1,5 +1,5 @@
 variable "DISCORD_WEBHOOK_URL" {
   type = string
-  description = "Adres webhooka do powiadomień Discord"
+  description = "Discord webhook URL for notifications"
   sensitive = true
 }
